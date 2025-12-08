@@ -2,14 +2,12 @@
 session_start();
 include 'koneksi.php';
 
-// Inisialisasi variabel error
 $error = null;
 
 if (isset($_POST['submit'])) {
     $username = $_POST['username'];
-    $password_input = $_POST['password']; // Ubah nama variabel input
+    $password_input = $_POST['password'];
     
-    // --- 1. CEK LOGIN ADMIN STATIS (Prioritas) ---
     $admin_username = "admin";
     $admin_password = "admin123";
 
@@ -20,9 +18,6 @@ if (isset($_POST['submit'])) {
         exit(); 
     }
     
-    // --- 2. CEK LOGIN USER DARI DATABASE ---
-    
-    // Pastikan mengambil id_user, password, dan role
     $stmt = $conn->prepare("SELECT id_user, username, password, role FROM user WHERE username = ?");
     $stmt->bind_param("s", $username);
     
@@ -35,7 +30,6 @@ if (isset($_POST['submit'])) {
         if ($result->num_rows === 1) {
             $user = $result->fetch_assoc();
             
-            // VERIFIKASI PASSWORD (Menggunakan hash)
             if (password_verify($password_input, $user['password'])) {
                 // Login User Berhasil
                 $_SESSION['role'] = $user['role']; 

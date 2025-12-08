@@ -21,7 +21,6 @@ $sql = mysqli_query($conn, $query);
 <body>
 
     <style>
-        /* Gradient Warna Anda */
         .navbar {
             background: #2D5493;
             border-bottom: 2px color(255, 255, 255, 0.5);
@@ -33,11 +32,8 @@ $sql = mysqli_query($conn, $query);
             color: white !important;
         }
 
-        /* ... (CSS Tombol Info, Hover, dll. yang sudah ada) ... */
-
         .navbar-menu {
             background-color: #f8f9fa !important;
-            /* Tambahkan border-top untuk memperjelas pemisahan jika diperlukan */
             border-top: 1px solid #dee2e6;
         }
 
@@ -48,7 +44,6 @@ $sql = mysqli_query($conn, $query);
             padding-right: 1.5rem;
         }
 
-        /* Styling Tombol Normal (misalnya tombol Login Anda) */
         .btn-info {
             background-color: #3F8AFA;
             border-color: white;
@@ -67,9 +62,7 @@ $sql = mysqli_query($conn, $query);
 
         .carousel-fixed-height {
             height: 80px;
-            /* Coba nilai ini */
             overflow: hidden;
-            /* Tambahkan margin-top/bottom jika perlu, tapi untuk header, biarkan 0 */
         }
 
         .carousel-fixed-height img {
@@ -88,7 +81,6 @@ $sql = mysqli_query($conn, $query);
         .card-img-top {
             width: 100%;
             height: 200px;
-            /* Jaga agar tinggi gambar selalu 200px */
             object-fit: cover;
         }
     </style>
@@ -96,7 +88,7 @@ $sql = mysqli_query($conn, $query);
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg">
         <div class="container-fluid">
-            <a class="navbar-brand" href="index.php">
+            <a class="navbar-brand" href="#">
                 <img src="gambar/logo.png" alt="Logo LELANGZ" height="40">
             </a>
 

@@ -96,8 +96,6 @@ $sql = mysqli_query($conn, $query);
             color: white !important;
         }
 
-        /* ... (CSS Tombol Info, Hover, dll. yang sudah ada) ... */
-
         .navbar-menu {
             background-color: #f8f9fa !important;
             /* Tambahkan border-top untuk memperjelas pemisahan jika diperlukan */
