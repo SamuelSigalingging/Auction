@@ -4,11 +4,10 @@ include 'koneksi.php';
 
 
 if (!isset($_SESSION['username'])) {
-    echo "<script>
-            alert('Anda harus login terlebih dahulu!');
-            window.location.href = 'login.php';
-          </script>";
-    exit;
+    $_SESSION['notif_type'] = 'warning';
+    $_SESSION['notif_message'] = 'Anda harus Login terlebih dahulu untuk melanjutkan.';
+    header("Location: login.php");
+    exit();
 }
 
 if (isset($_POST['submit'])) {
@@ -58,6 +57,7 @@ if (isset($_POST['submit'])) {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -66,11 +66,11 @@ if (isset($_POST['submit'])) {
     <link rel="stylesheet" href="fontawesome/css/font-awesome.min.css">
     <script src="js/bootstrap.bundle.min.js"></script>
 </head>
+
 <body>
-<style>
-        /* Gradient Warna Anda */
+    <style>
         .navbar {
-            background: #2D5493;
+            background: #3F8AFA;
             border-bottom: 2px color(255, 255, 255, 0.5);
         }
 
@@ -80,11 +80,8 @@ if (isset($_POST['submit'])) {
             color: white !important;
         }
 
-        /* ... (CSS Tombol Info, Hover, dll. yang sudah ada) ... */
-
         .navbar-menu {
             background-color: #f8f9fa !important;
-            /* Tambahkan border-top untuk memperjelas pemisahan jika diperlukan */
             border-top: 1px solid #dee2e6;
         }
 
@@ -95,10 +92,22 @@ if (isset($_POST['submit'])) {
             padding-right: 1.5rem;
         }
 
-        /* Styling Tombol Normal (misalnya tombol Login Anda) */
         .btn-info {
             background-color: #3F8AFA;
             border-color: white;
+            color: white;
+        }
+
+        .btn-info2 {
+            background-color: #3F8AFA;
+            border-color: white;
+            color: white;
+            width: 90px;
+        }
+
+        .btn-info2:hover {
+            background-color: #032A63;
+            border-color: #032A63;
             color: white;
         }
 
@@ -114,9 +123,7 @@ if (isset($_POST['submit'])) {
 
         .carousel-fixed-height {
             height: 80px;
-            /* Coba nilai ini */
             overflow: hidden;
-            /* Tambahkan margin-top/bottom jika perlu, tapi untuk header, biarkan 0 */
         }
 
         .carousel-fixed-height img {
@@ -131,12 +138,29 @@ if (isset($_POST['submit'])) {
             border: none;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
+
+        .card-img-top {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .alert-error {
+            color: #a94442;
+            background-color: #f2dede;
+            border-color: #ebccd1;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            text-align: center;
+        }
     </style>
 
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg">
         <div class="container-fluid">
-            <a class="navbar-brand" href="index.php">
+            <a class="navbar-brand" href="#">
                 <img src="gambar/logo.png" alt="Logo LELANGZ" height="40">
             </a>
 
@@ -171,44 +195,45 @@ if (isset($_POST['submit'])) {
 
                 <form class="d-flex ms-auto col-lg-4" action="index.php" method="GET">
                     <input class="form-control me-2" type="search" placeholder="Cari berdasarkan nama..." aria-label="Search" name="keyword" value="<?php echo isset($_GET['keyword']) ? htmlspecialchars($_GET['keyword']) : ''; ?>">
-                    <button class="btn btn-info" type="submit">Cari</button>
+                    <button class="btn btn-info2" type="submit">Cari</button>
                 </form>
 
             </div>
         </div>
     </nav>
-<!-- Navbar End -->
+    <!-- Navbar End -->
 
-<div class="container mt-5">
-    <h2>Ajukan Barang untuk Lelang</h2>
-    <form method="POST" enctype="multipart/form-data">
-        <div class="mb-3">
-            <label for="judul" class="form-label">Judul Barang</label>
-            <input type="text" class="form-control" id="judul" name="judul" required>
-        </div>
-        <div class="mb-3">
-            <label for="deskripsi" class="form-label">Deskripsi Barang</label>
-            <textarea class="form-control" id="deskripsi" name="deskripsi" rows="4" required></textarea>
-        </div>
-        <div class="mb-3">
-            <label for="harga" class="form-label">Harga Awal</label>
-            <input type="number" class="form-control" id="harga" name="harga" required>
-        </div>
-        <div class="mb-3">
-            <label for="lokasi" class="form-label">Lokasi</label>
-            <input type="text" class="form-control" id="lokasi" name="lokasi" required>
-        </div>
-        <div class="mb-3">
-            <label for="durasi" class="form-label">Durasi Lelang (hari)</label>
-            <input type="number" class="form-control" id="durasi" name="durasi" required>
-        </div>
-        <div class="mb-3">
-            <label for="gambar" class="form-label">Unggah Gambar</label>
-            <input type="file" class="form-control" id="gambar" name="gambar" accept="image/*" required>
-        </div>
-        <button type="submit" name="submit" class="btn btn-primary"><i class="fa fa-arrow-up"></i>  Ajukan Barang</button>
-    </form>
-</div>
+    <div class="container mt-5">
+        <h2>Ajukan Barang untuk Lelang</h2>
+        <form method="POST" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label for="judul" class="form-label">Judul Barang</label>
+                <input type="text" class="form-control" id="judul" name="judul" required>
+            </div>
+            <div class="mb-3">
+                <label for="deskripsi" class="form-label">Deskripsi Barang</label>
+                <textarea class="form-control" id="deskripsi" name="deskripsi" rows="4" required></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="harga" class="form-label">Harga Awal</label>
+                <input type="number" class="form-control" id="harga" name="harga" required>
+            </div>
+            <div class="mb-3">
+                <label for="lokasi" class="form-label">Lokasi</label>
+                <input type="text" class="form-control" id="lokasi" name="lokasi" required>
+            </div>
+            <div class="mb-3">
+                <label for="durasi" class="form-label">Durasi Lelang (hari)</label>
+                <input type="number" class="form-control" id="durasi" name="durasi" required>
+            </div>
+            <div class="mb-3">
+                <label for="gambar" class="form-label">Unggah Gambar</label>
+                <input type="file" class="form-control" id="gambar" name="gambar" accept="image/*" required>
+            </div>
+            <button type="submit" name="submit" class="btn btn-primary"><i class="fa fa-arrow-up"></i> Ajukan Barang</button>
+        </form>
+    </div>
 
 </body>
+
 </html>

@@ -1,6 +1,6 @@
 <?php
 session_start();
-include 'koneksi.php'; 
+include 'koneksi.php';
 
 $error = null; // Inisialisasi variabel error
 
@@ -17,11 +17,11 @@ if (isset($_POST['submit'])) {
         $error = "Konfirmasi password tidak cocok!";
     } elseif (strlen($password) < 6) {
         $error = "Password minimal 6 karakter.";
-    } 
-    
+    }
+
     // HANYA LANJUTKAN PROSES KE DB JIKA TIDAK ADA ERROR VALIDASI
     if (!$error) {
-        
+
         // 2. Cek apakah Username sudah ada
         $stmt = $conn->prepare("SELECT id_user FROM user WHERE username = ?");
         $stmt->bind_param("s", $username);
@@ -36,11 +36,11 @@ if (isset($_POST['submit'])) {
 
             // 3. Proses Insert ke DB
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-            $role = 'user'; 
+            $role = 'user';
 
             $query_insert = "INSERT INTO user (username, password, role) VALUES (?, ?, ?)";
             $stmt_insert = $conn->prepare($query_insert);
-            
+
             // JANGAN PAKAI $password di sini, karena $password hanya digunakan di atas
             $stmt_insert->bind_param("sss", $username, $hashed_password, $role);
 
@@ -48,7 +48,7 @@ if (isset($_POST['submit'])) {
                 // Pendaftaran Berhasil
                 $_SESSION['notif_message'] = "Pendaftaran berhasil! Silakan Login.";
                 $_SESSION['notif_type'] = 'success';
-                
+
                 header('Location: login.php');
                 exit();
             } else {
@@ -63,6 +63,7 @@ if (isset($_POST['submit'])) {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -73,13 +74,18 @@ if (isset($_POST['submit'])) {
     <style>
         /* CSS yang sama dengan login.php untuk konsistensi */
         .background-blur {
-            background: url('gambar/bg_lelang.jpg') no-repeat center center fixed; /* Ganti path gambar Anda */
+            background: url('gambar/bg_lelang.jpg') no-repeat center center fixed;
+            /* Ganti path gambar Anda */
             background-size: cover;
             filter: blur(5px);
             position: absolute;
-            top: -5px; bottom: -5px; left: -5px; right: -5px;
+            top: -5px;
+            bottom: -5px;
+            left: -5px;
+            right: -5px;
             z-index: -1;
         }
+
         body {
             height: 100vh;
             display: flex;
@@ -89,34 +95,41 @@ if (isset($_POST['submit'])) {
             overflow: hidden;
             position: relative;
         }
-        .login-card { /* Digunakan juga untuk register card */
+
+        .login-card {
+            /* Digunakan juga untuk register card */
             width: 100%;
-            max-width: 400px; 
-            background: rgba(255, 255, 255, 0.9); 
+            max-width: 400px;
+            background: rgba(255, 255, 255, 0.9);
             border-radius: 12px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
             padding: 30px;
             position: relative;
         }
+
         .login-card h2 {
             font-size: 24px;
             font-weight: 600;
             margin-bottom: 25px;
             color: #333;
         }
-        .btn-info { /* Tombol warna pink/ungu */
-            background-color: #f06292;
-            border-color: #f06292;
+
+        .btn-info {
+            background-color: #3F8AFA;
+            border-color: white;
             width: 100%;
             border-radius: 25px;
-            color:white;
+            color: white;
             font-weight: bold;
             padding: 10px;
         }
+
         .btn-info:hover {
-            background-color: #e91e63;
-            border-color: #e91e63;
+            background-color: #032A63;
+            border-color: #032A63;
+            color: white;
         }
+
         .alert-error {
             color: #a94442;
             background-color: #f2dede;
@@ -129,12 +142,13 @@ if (isset($_POST['submit'])) {
         }
     </style>
 </head>
+
 <body>
     <div class="background-blur"></div>
 
     <div class="login-card">
         <h2 class="text-center">Daftar Akun Baru</h2>
-        
+
         <?php if (isset($error)): ?>
             <div class="alert-error"><?php echo htmlspecialchars($error); ?></div>
         <?php endif; ?>
@@ -148,7 +162,7 @@ if (isset($_POST['submit'])) {
                 <label for="password" class="form-label">Password</label>
                 <input type="password" class="form-control" id="password" name="password" required>
             </div>
-             <div class="mb-3">
+            <div class="mb-3">
                 <label for="confirm_password" class="form-label">Konfirmasi Password</label>
                 <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
             </div>
@@ -157,4 +171,5 @@ if (isset($_POST['submit'])) {
         <p class="text-center mt-3"><small>Sudah punya akun? <a href="login.php">Login di sini</a></small></p>
     </div>
 </body>
+
 </html>

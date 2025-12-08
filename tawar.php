@@ -2,7 +2,6 @@
 session_start();
 include 'koneksi.php';
 
-// --- 1. CEK LOGIN & AMBIL ID BARANG ---
 if (!isset($_GET['id']) || empty($_GET['id'])) {
     header("Location: index.php");
     exit();
@@ -10,7 +9,6 @@ if (!isset($_GET['id']) || empty($_GET['id'])) {
 $id = $_GET['id'];
 $error = null;
 
-// Cek Login
 if (!isset($_SESSION['id_user'])) {
     $_SESSION['notif_type'] = 'warning';
     $_SESSION['notif_message'] = 'Anda harus Login untuk mengajukan penawaran.';
@@ -18,39 +16,34 @@ if (!isset($_SESSION['id_user'])) {
     exit();
 }
 
-// --- 2. AMBIL DETAIL BARANG DARI DATABASE (AMAN) ---
 $stmt_item = $conn->prepare("SELECT id, judul, deskripsi, harga, lokasi, durasi, status, gambar FROM items WHERE id = ?");
 $stmt_item->bind_param("i", $id);
 $stmt_item->execute();
 $result_item = $stmt_item->get_result();
 
 if ($result_item->num_rows === 0) {
-    header("Location: index.php"); // Item tidak ditemukan
+    header("Location: index.php");
     exit();
 }
 $result = $result_item->fetch_assoc();
 $harga_saat_ini = $result['harga'];
 
-
-// --- 3. CEK STATUS BARANG (SEBELUM PROSES POST) ---
 if ($result['status'] == 'Belum Diverifikasi') {
     $_SESSION['notif_type'] = 'danger';
     $_SESSION['notif_message'] = 'Barang ini belum diverifikasi. Anda tidak dapat menawar sekarang.';
-    header("Location: index.php"); // Redirect ke index
+    header("Location: index.php");
     exit;
 } elseif ($result['status'] == 'Terjual') {
     $_SESSION['notif_type'] = 'danger';
     $_SESSION['notif_message'] = 'Barang ini sudah terjual. Anda tidak dapat menawar sekarang.';
-    header("Location: index.php"); // Redirect ke index
+    header("Location: index.php");
     exit;
 }
 
-// --- 4. LOGIKA POST PENAWARAN (AMAN & MENGGUNAKAN SESSION NOTIF) ---
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $hargaBaru = $_POST['harga'];
 
-    // Validasi Input
     if (!is_numeric($hargaBaru) || $hargaBaru <= 0) {
         $error = 'Penawaran harus berupa angka yang valid dan lebih besar dari nol.';
     } elseif ($hargaBaru <= $harga_saat_ini) {
@@ -58,30 +51,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $error = "Harga yang diajukan harus lebih tinggi dari harga saat ini (Rp {$harga_format}).";
     }
 
-    // Proses Update Database jika tidak ada error
     if (!$error) {
-
-        // UPDATE harga tertinggi
         $updateQuery = "UPDATE items SET harga = ? WHERE id = ?";
         $stmt_update = mysqli_prepare($conn, $updateQuery);
         mysqli_stmt_bind_param($stmt_update, "di", $hargaBaru, $id);
 
         if (mysqli_stmt_execute($stmt_update)) {
 
-            // Logika Sukses (Menggunakan Session Notif)
             $_SESSION['notif_type'] = 'success';
             $_SESSION['notif_message'] = 'Penawaran Anda sebesar Rp ' . number_format($hargaBaru, 0, ',', '.') . ' berhasil diajukan!';
 
             header("Location: tawar.php?id=$id");
             exit();
         } else {
-            // Logika Error DB
             $error = 'Terjadi kesalahan saat memperbarui harga di database: ' . mysqli_error($conn);
         }
     }
 }
 
-// --- 5. LOGIKA PHP UNTUK MENAMPILKAN TOAST (Disalin dari index.php) ---
 $notif_script = '';
 if (isset($_SESSION['notif_message'])) {
     $msg = $_SESSION['notif_message'];
@@ -121,9 +108,8 @@ if (isset($_SESSION['notif_message'])) {
     <script src="js/bootstrap.bundle.min.js"></script>
 
     <style>
-        /* Gradient Warna Anda */
         .navbar {
-            background: #2D5493;
+            background: #3F8AFA;
             border-bottom: 2px color(255, 255, 255, 0.5);
         }
 
@@ -133,11 +119,8 @@ if (isset($_SESSION['notif_message'])) {
             color: white !important;
         }
 
-        /* ... (CSS Tombol Info, Hover, dll. yang sudah ada) ... */
-
         .navbar-menu {
             background-color: #f8f9fa !important;
-            /* Tambahkan border-top untuk memperjelas pemisahan jika diperlukan */
             border-top: 1px solid #dee2e6;
         }
 
@@ -148,10 +131,22 @@ if (isset($_SESSION['notif_message'])) {
             padding-right: 1.5rem;
         }
 
-        /* Styling Tombol Normal (misalnya tombol Login Anda) */
         .btn-info {
             background-color: #3F8AFA;
             border-color: white;
+            color: white;
+        }
+
+        .btn-info2 {
+            background-color: #3F8AFA;
+            border-color: white;
+            color: white;
+            width: 90px;
+        }
+
+        .btn-info2:hover {
+            background-color: #032A63;
+            border-color: #032A63;
             color: white;
         }
 
@@ -167,9 +162,7 @@ if (isset($_SESSION['notif_message'])) {
 
         .carousel-fixed-height {
             height: 80px;
-            /* Coba nilai ini */
             overflow: hidden;
-            /* Tambahkan margin-top/bottom jika perlu, tapi untuk header, biarkan 0 */
         }
 
         .carousel-fixed-height img {
@@ -184,12 +177,29 @@ if (isset($_SESSION['notif_message'])) {
             border: none;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
+
+        .card-img-top {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .alert-error {
+            color: #a94442;
+            background-color: #f2dede;
+            border-color: #ebccd1;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            text-align: center;
+        }
     </style>
 
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg">
         <div class="container-fluid">
-            <a class="navbar-brand" href="index.php">
+            <a class="navbar-brand" href="#">
                 <img src="gambar/logo.png" alt="Logo LELANGZ" height="40">
             </a>
 
@@ -224,7 +234,7 @@ if (isset($_SESSION['notif_message'])) {
 
                 <form class="d-flex ms-auto col-lg-4" action="index.php" method="GET">
                     <input class="form-control me-2" type="search" placeholder="Cari berdasarkan nama..." aria-label="Search" name="keyword" value="<?php echo isset($_GET['keyword']) ? htmlspecialchars($_GET['keyword']) : ''; ?>">
-                    <button class="btn btn-info" type="submit">Cari</button>
+                    <button class="btn btn-info2" type="submit">Cari</button>
                 </form>
 
             </div>

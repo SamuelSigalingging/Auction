@@ -1,9 +1,49 @@
 <?php
-session_start(); // Pastikan session dimulai
+session_start();
 include 'koneksi.php';
 
-$query = "SELECT * FROM items";
-$sql = mysqli_query($conn, $query);
+$query_base = "SELECT * FROM items";
+$keyword = '';
+
+$query_to_execute = $query_base; 
+
+if (isset($_GET['keyword']) && !empty(trim($_GET['keyword']))) {
+    $keyword = mysqli_real_escape_string($conn, $_GET['keyword']);
+    
+    $query_to_execute = $query_base . " WHERE judul LIKE '%" . $keyword . "%'";
+}
+
+$sql = mysqli_query($conn, $query_to_execute); 
+
+if (!$sql) {
+    die("Query Error: " . mysqli_error($conn));
+}
+
+$notif_script = '';
+if (isset($_SESSION['notif_message'])) {
+    $msg = $_SESSION['notif_message'];
+    $type = $_SESSION['notif_type'];
+    $title = ($type == 'success' ? 'Berhasil!' : ($type == 'warning' ? 'Perhatian!' : 'Error!'));
+
+    unset($_SESSION['notif_message']);
+    unset($_SESSION['notif_type']);
+    
+    $notif_script = "<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var toastEl = document.getElementById('liveToast');
+            var toast = new bootstrap.Toast(toastEl);
+            
+            toastEl.querySelector('.toast-title').innerText = '$title';
+            toastEl.querySelector('.toast-body').innerHTML = '<span class=\"text-$type fw-bold\">$msg</span>';
+
+            var header = toastEl.querySelector('.toast-header');
+            header.classList.remove('bg-danger', 'bg-warning', 'bg-success'); 
+            header.classList.add('bg-' + '$type', 'text-white'); 
+            
+            toast.show();
+        });
+    </script>";
+}
 ?>
 
 <!DOCTYPE html>
@@ -22,7 +62,7 @@ $sql = mysqli_query($conn, $query);
 
     <style>
         .navbar {
-            background: #2D5493;
+            background: #3F8AFA;
             border-bottom: 2px color(255, 255, 255, 0.5);
         }
 
@@ -47,6 +87,19 @@ $sql = mysqli_query($conn, $query);
         .btn-info {
             background-color: #3F8AFA;
             border-color: white;
+            color: white;
+        }
+
+        .btn-info2 {
+            background-color: #3F8AFA;
+            border-color: white;
+            color: white;
+            width: 90px;
+        }
+
+        .btn-info2:hover {
+            background-color: #032A63;
+            border-color: #032A63;
             color: white;
         }
 
@@ -82,6 +135,17 @@ $sql = mysqli_query($conn, $query);
             width: 100%;
             height: 200px;
             object-fit: cover;
+        }
+
+        .alert-error {
+            color: #a94442;
+            background-color: #f2dede;
+            border-color: #ebccd1;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            text-align: center;
         }
     </style>
 
@@ -123,7 +187,7 @@ $sql = mysqli_query($conn, $query);
 
                 <form class="d-flex ms-auto col-lg-4" action="index.php" method="GET">
                     <input class="form-control me-2" type="search" placeholder="Cari berdasarkan nama..." aria-label="Search" name="keyword" value="<?php echo isset($_GET['keyword']) ? htmlspecialchars($_GET['keyword']) : ''; ?>">
-                    <button class="btn btn-info" type="submit">Cari</button>
+                    <button class="btn btn-info2" type="submit">Cari</button>
                 </form>
 
             </div>
@@ -157,79 +221,74 @@ $sql = mysqli_query($conn, $query);
 
     <!-- Card Section -->
     <div class="container mt-4">
-    <div class="row d-flex justify-content-center"> 
-        
-        <?php 
-        // Cek jika tidak ada hasil pencarian
-        if (mysqli_num_rows($sql) == 0 && isset($_GET['keyword']) && !empty(trim($_GET['keyword']))) {
-            echo '<div class="col-12"><div class="alert alert-info" role="alert">Hasil pencarian untuk "<b>' . htmlspecialchars($_GET['keyword']) . '</b>" tidak ditemukan.</div></div>';
-        }
-        ?>
+        <div class="row d-flex justify-content-center">
 
-        <?php while ($result = mysqli_fetch_assoc($sql)) { ?>
             <?php
-            // Pengecekan gambar (tetap dipertahankan)
-            $path = "" . $result['gambar'];
-            if (!file_exists($path)) {
-                // error_log("Gambar tidak ditemukan: " . $path); // Pindahkan logging ke sini
+            if (mysqli_num_rows($sql) == 0 && isset($_GET['keyword']) && !empty(trim($_GET['keyword']))) {
+                echo '<div class="col-12"><div class="alert alert-info" role="alert">Hasil pencarian untuk "<b>' . htmlspecialchars($_GET['keyword']) . '</b>" tidak ditemukan.</div></div>';
             }
-            
-            $status_barang = $result['status'];
-            $item_id = $result['id'];
             ?>
-            
-            <div class="col-md-4 col-sm-6 mb-4">
-                <div class="card shadow-md w-100">
-                    
-                    <?php if (!empty($result['gambar']) && file_exists($path)) { ?>
-                        <img src="<?php echo $path; ?>" class="card-img-top" alt="Gambar Barang">
-                    <?php } else { ?>
-                        <img src="gambar/default.jpg" class="card-img-top" alt="Gambar Barang">
-                    <?php } ?>
-                    
-                    <div class="card-body">
-                        <h5 class="card-title"><?php echo $result['judul']; ?></h5>
-                        <p class="card-text"><?php echo $result['deskripsi']; ?></p>
-                    </div>
-                    
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">
-                            Harga: Rp
+
+            <?php while ($result = mysqli_fetch_assoc($sql)) { ?>
+                <?php
+                $path = "" . $result['gambar'];
+                if (!file_exists($path)) {
+                }
+
+                $status_barang = $result['status'];
+                $item_id = $result['id'];
+                ?>
+
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="card shadow-md w-100">
+
+                        <?php if (!empty($result['gambar']) && file_exists($path)) { ?>
+                            <img src="<?php echo $path; ?>" class="card-img-top" alt="Gambar Barang">
+                        <?php } else { ?>
+                            <img src="gambar/default.jpg" class="card-img-top" alt="Gambar Barang">
+                        <?php } ?>
+
+                        <div class="card-body">
+                            <h5 class="card-title"><?php echo $result['judul']; ?></h5>
+                            <p class="card-text"><?php echo $result['deskripsi']; ?></p>
+                        </div>
+
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">
+                                Harga: Rp
+                                <?php
+                                $harga_angka = $result['harga'];
+                                $harga_tampil = number_format($harga_angka, 0, ',', '.');
+                                echo $harga_tampil;
+                                ?>
+                            </li>
+                            <li class="list-group-item">Lokasi: <?php echo $result['lokasi']; ?></li>
+                            <li class="list-group-item">Status: <strong><?php echo $status_barang; ?></strong></li>
+                            <li class="list-group-item">Durasi (hari): <?php echo $result['durasi']; ?></li>
+                        </ul>
+
+                        <div class="card-body">
                             <?php
-                            $harga_angka = $result['harga'];
-                            $harga_tampil = number_format($harga_angka, 0, ',', '.');
-                            echo $harga_tampil;
+                            if ($status_barang == 'Tersedia') {
+
+                                echo '<a href="tawar.php?id=' . $item_id . '" class="btn btn-info w-100"><i class="fa fa-gavel"></i> Ajukan Penawaran</a>';
+                            } elseif ($status_barang == 'Belum Diverifikasi') {
+
+                                echo '<button class="btn btn-secondary w-100" disabled><i class="fa fa-clock-o"></i> Menunggu Verifikasi</button>';
+                            } elseif ($status_barang == 'Terjual') {
+
+                                echo '<button class="btn btn-danger w-100" disabled><i class="fa fa-lock"></i> Lelang Telah Berakhir</button>';
+                            } else {
+
+                                echo '<button class="btn btn-secondary w-100" disabled>Status Tidak Valid</button>';
+                            }
                             ?>
-                        </li>
-                        <li class="list-group-item">Lokasi: <?php echo $result['lokasi']; ?></li>
-                        <li class="list-group-item">Status: <strong><?php echo $status_barang; ?></strong></li>
-                        <li class="list-group-item">Durasi (hari): <?php echo $result['durasi']; ?></li>
-                    </ul>
-                    
-                    <div class="card-body">
-                        <?php 
-                        if ($status_barang == 'Tersedia') {
-                            
-                            echo '<a href="tawar.php?id=' . $item_id . '" class="btn btn-info w-100"><i class="fa fa-gavel"></i> Ajukan Penawaran</a>';
-                        
-                        } elseif ($status_barang == 'Belum Diverifikasi') {
-                            
-                            echo '<button class="btn btn-secondary w-100" disabled><i class="fa fa-clock-o"></i> Menunggu Verifikasi</button>';
-                            
-                        } elseif ($status_barang == 'Terjual') {
-                           
-                            echo '<button class="btn btn-danger w-100" disabled><i class="fa fa-lock"></i> Lelang Telah Berakhir</button>';
-                        } else {
-                            
-                             echo '<button class="btn btn-secondary w-100" disabled>Status Tidak Valid</button>';
-                        }
-                        ?>
+                        </div>
                     </div>
-                    </div>
-            </div>
-        <?php } ?>
+                </div>
+            <?php } ?>
+        </div>
     </div>
-</div>
 
 </body>
 

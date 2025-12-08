@@ -13,17 +13,6 @@ if (isset($_GET['verifikasi_id'])) {
     $msg = mysqli_query($conn, $query) ? "Barang sudah diverifikasi!" : "Gagal memverifikasi barang.";
 }
 
-// if (isset($_GET['verifikasi_id'])) {
-//     $verifikasi_id = mysqli_real_escape_string($conn, $_GET['verifikasi_id']);
-//     $query = "UPDATE items SET status_verifikasi='Diverifikasi' WHERE id='$verifikasi_id'";
-//     if (mysqli_query($conn, $query)) {
-//         $msg = "Barang sudah diverifikasi!";
-//     } else {
-//         $msg = "Gagal memverifikasi barang.";
-//     }
-// }
-
-
 if (isset($_GET['update_status_id'])) {
     $update_status_id = mysqli_real_escape_string($conn, $_GET['update_status_id']);
     $new_status = mysqli_real_escape_string($conn, $_GET['status']);
@@ -84,7 +73,6 @@ $sql = mysqli_query($conn, $query);
 </head>
 <body>
 <style>
-        /* Gradient Warna Anda */
         .navbar {
             background: #2D5493;
             border-bottom: 2px color(255, 255, 255, 0.5);

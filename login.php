@@ -90,20 +90,23 @@ if (isset($_POST['submit'])) {
             margin-bottom: 25px;
             color: #333;
         }
-        /* Custom Button Warna Pink/Ungu Anda */
+
         .btn-info { 
-            background-color: #f06292;
-            border-color: #f06292;
+            background-color: #3F8AFA;
+            border-color: white;
             width: 100%;
-            border-radius: 25px; /* Lebih melingkar */
+            border-radius: 25px;
             color:white;
             font-weight: bold;
             padding: 10px;
         }
+
         .btn-info:hover {
-            background-color: #e91e63;
-            border-color: #e91e63;
+            background-color: #032A63;
+            border-color: #032A63;
+            color: white;
         }
+
         .alert-error {
             color: #a94442;
             background-color: #f2dede;

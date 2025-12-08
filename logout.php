@@ -1,6 +1,6 @@
 <?php
 session_start();
-session_destroy(); // Mengakhiri sesi
-header('Location: login.php'); // Arahkan kembali ke halaman login setelah logout
+session_destroy();
+header('Location: login.php');
 exit();
 ?>

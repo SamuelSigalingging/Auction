@@ -48,9 +48,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <body>
 
 <style>
-        /* Gradient Warna Anda */
         .navbar {
-            background: #2D5493;
+            background: #3F8AFA;
             border-bottom: 2px color(255, 255, 255, 0.5);
         }
 
@@ -60,11 +59,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             color: white !important;
         }
 
-        /* ... (CSS Tombol Info, Hover, dll. yang sudah ada) ... */
-
         .navbar-menu {
             background-color: #f8f9fa !important;
-            /* Tambahkan border-top untuk memperjelas pemisahan jika diperlukan */
             border-top: 1px solid #dee2e6;
         }
 
@@ -75,10 +71,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             padding-right: 1.5rem;
         }
 
-        /* Styling Tombol Normal (misalnya tombol Login Anda) */
         .btn-info {
             background-color: #3F8AFA;
             border-color: white;
+            color: white;
+        }
+
+        .btn-info2 {
+            background-color: #3F8AFA;
+            border-color: white;
+            color: white;
+            width: 90px;
+        }
+
+        .btn-info2:hover {
+            background-color: #032A63;
+            border-color: #032A63;
             color: white;
         }
 
@@ -94,9 +102,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         .carousel-fixed-height {
             height: 80px;
-            /* Coba nilai ini */
             overflow: hidden;
-            /* Tambahkan margin-top/bottom jika perlu, tapi untuk header, biarkan 0 */
         }
 
         .carousel-fixed-height img {
@@ -111,12 +117,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             border: none;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
+
+        .card-img-top {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .alert-error {
+            color: #a94442;
+            background-color: #f2dede;
+            border-color: #ebccd1;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            text-align: center;
+        }
     </style>
 
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg">
         <div class="container-fluid">
-            <a class="navbar-brand" href="index.php">
+            <a class="navbar-brand" href="#">
                 <img src="gambar/logo.png" alt="Logo LELANGZ" height="40">
             </a>
 
@@ -151,7 +174,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                 <form class="d-flex ms-auto col-lg-4" action="index.php" method="GET">
                     <input class="form-control me-2" type="search" placeholder="Cari berdasarkan nama..." aria-label="Search" name="keyword" value="<?php echo isset($_GET['keyword']) ? htmlspecialchars($_GET['keyword']) : ''; ?>">
-                    <button class="btn btn-info" type="submit">Cari</button>
+                    <button class="btn btn-info2" type="submit">Cari</button>
                 </form>
 
             </div>
