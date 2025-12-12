@@ -59,11 +59,11 @@ if (isset($_POST['submit'])) {
     <style>
         /* GANTI PATH INI */
         .background-blur {
-            background: url('gambar/lelang1.png') no-repeat center center fixed; /* Ganti bg_lelang.jpg */
+            background: url('gambar/background2.png') no-repeat center center fixed;
             background-size: cover;
-            filter: blur(5px); /* Atur tingkat blur di sini */
+            filter: blur(5px);
             position: absolute;
-            top: -5px; bottom: -5px; left: -5px; right: -5px; /* Kompensasi untuk blur */
+            top: -5px; bottom: -5px; left: -5px; right: -5px;
             z-index: -1;
         }
         body {

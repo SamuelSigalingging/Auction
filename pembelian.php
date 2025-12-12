@@ -218,17 +218,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <label for="jumlah" class="form-label">Jumlah Uang</label>
             <input type="number" class="form-control" id="jumlah" name="jumlah" required> 
         </div>
-        <div class="mb-3">
-            <label for="metode pembayaran" class="form-label">Pilih Metode Pembayaran</label>
-            <select class="form-select" id="metode_pembayaran" name="metode_pembayaran" required>
-                <option value="" disabled selected>-- Pilih Opsi --</option>
-                <option value="transfer_bank">Transfer Bank (BCA/Mandiri)</option>
-                <option value="dana">E-Wallet (Dana/Gopay)</option>
-                <option value="kartu_kredit">Kartu Kredit / Debit</option>
-                <option value="cod">Cash on Delivery (COD)</option>
-            </select> 
-        </div>
-        <button type="submit" class="btn btn-info">Konfirmasi Pembelian</button>
+        <button type="submit" class="btn btn-info" id="beli">Konfirmasi Pembelian</button>
     </form>
 </div>
 </body>

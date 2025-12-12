@@ -171,12 +171,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <a class="nav-link" href="ajukan.php">AYO LELANG</a>
                     </li>
                 </ul>
-
                 <form class="d-flex ms-auto col-lg-4" action="index.php" method="GET">
-                    <input class="form-control me-2" type="search" placeholder="Cari berdasarkan nama..." aria-label="Search" name="keyword" value="<?php echo isset($_GET['keyword']) ? htmlspecialchars($_GET['keyword']) : ''; ?>">
+                    <input class="form-control me-2" type="search" placeholder="Cari judul..." aria-label="Search" name="keyword" value="<?php echo isset($_GET['keyword']) ? htmlspecialchars($_GET['keyword']) : ''; ?>">
                     <button class="btn btn-info2" type="submit">Cari</button>
                 </form>
-
             </div>
         </div>
     </nav>
@@ -189,30 +187,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         <div class="mb-3">
             <label for="judul" class="form-label">Judul Barang</label>
-            <input type="text" class="form-control" id="judul" name="judul" value="<?php echo $result['judul']; ?>" required>
+            <input type="text" class="form-control" id="judul_baru" name="judul" value="<?php echo $result['judul']; ?>" required>
         </div>
 
         <div class="mb-3">
             <label for="deskripsi" class="form-label">Deskripsi Barang</label>
-            <textarea class="form-control" id="deskripsi" name="deskripsi" required><?php echo $result['deskripsi']; ?></textarea>
+            <textarea class="form-control" id="deskripsi_baru" name="deskripsi" required><?php echo $result['deskripsi']; ?></textarea>
         </div>
 
         <div class="mb-3">
             <label for="harga" class="form-label">Harga</label>
-            <input type="text" class="form-control" id="harga" name="harga" value="<?php echo $result['harga']; ?>" required>
+            <input type="text" class="form-control" id="harga_baru" name="harga" value="<?php echo $result['harga']; ?>" required>
         </div>
 
         <div class="mb-3">
             <label for="lokasi" class="form-label">Lokasi</label>
-            <input type="text" class="form-control" id="lokasi" name="lokasi" value="<?php echo $result['lokasi']; ?>" required>
+            <input type="text" class="form-control" id="lokasi_baru" name="lokasi" value="<?php echo $result['lokasi']; ?>" required>
         </div>
 
         <div class="mb-3">
             <label for="durasi" class="form-label">Durasi (Hari)</label>
-            <input type="number" class="form-control" id="durasi" name="durasi" value="<?php echo $result['durasi']; ?>" required>
+            <input type="number" class="form-control" id="durasi_baru" name="durasi" value="<?php echo $result['durasi']; ?>" required>
         </div>
 
-        <button type="submit" class="btn btn-info">
+        <button type="submit" class="btn btn-info" id="update">
             <i class="fa fa-pencil"></i> Update Barang
         </button>
     </form>

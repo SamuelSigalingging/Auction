@@ -286,7 +286,7 @@ if (isset($_SESSION['notif_message'])) {
                     <label for="harga" class="form-label">Harga Penawaran (Harus > Rp <?php echo number_format($harga_saat_ini, 0, ',', '.'); ?>)</label>
                     <input type="number" step="any" min="<?php echo $harga_saat_ini + 1; ?>" class="form-control" id="harga" name="harga" required>
                 </div>
-                <button type="submit" class="btn btn-info">Ajukan Harga</button>
+                <button type="submit" class="btn btn-info" id="ajukan">Ajukan Harga</button>
                 <a href="pembelian.php?id=<?php echo $id; ?>" type="button" class="btn btn-success">Beli Sekarang</a>
             </form>
         </div>

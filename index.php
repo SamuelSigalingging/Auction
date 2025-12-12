@@ -181,7 +181,7 @@ if (isset($_SESSION['notif_message'])) {
                         <a class="nav-link active" aria-current="page" href="index.php">INFO</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="ajukan.php">AYO LELANG</a>
+                        <a class="nav-link" href="ajukan.php" id="ajukan">AYO LELANG</a>
                     </li>
                 </ul>
 
@@ -199,13 +199,13 @@ if (isset($_SESSION['notif_message'])) {
     <div id="carouselExampleFade" class="carousel slide carousel-fade" data-bs-ride="carousel">
         <div class="carousel-inner">
             <div class="carousel-item active">
-                <img src="gambar/lelang2.png" class="d-block w-100" alt="gambar">
+                <img src="gambar/carousel.png" class="d-block w-100" alt="gambar">
             </div>
             <div class="carousel-item">
-                <img src="gambar/lelang2.png" class="d-block w-100" alt="...">
+                <img src="gambar/carousel2.png" class="d-block w-100" alt="...">
             </div>
             <div class="carousel-item">
-                <img src="gambar/lelang2.png" class="d-block w-100" alt="...">
+                <img src="gambar/carousel3.png" class="d-block w-100" alt="...">
             </div>
         </div>
         <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="prev">

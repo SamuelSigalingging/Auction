@@ -86,7 +86,6 @@ $sql = mysqli_query($conn, $query);
 
         .navbar-menu {
             background-color: #f8f9fa !important;
-            /* Tambahkan border-top untuk memperjelas pemisahan jika diperlukan */
             border-top: 1px solid #dee2e6;
         }
 
@@ -201,14 +200,14 @@ $sql = mysqli_query($conn, $query);
                                 <td>
                                     <div class="d-flex flex-wrap gap-2">
                                         <a href="admin.php?update_status_id=<?php echo $result['id']; ?>&status=Terjual"
-                                            class="btn btn-success btn-sm">Terjual</a>
+                                            class="btn btn-success btn-sm" id="Terjual">Terjual</a>
                                         <a href="admin.php?update_status_id=<?php echo $result['id']; ?>&status=Tersedia"
-                                            class="btn btn-primary btn-sm">Tersedia</a>
+                                            class="btn btn-primary btn-sm" id="Tersedia">Tersedia</a>
                                         <a href="admin.php?delete_id=<?php echo $result['id']; ?>"
                                             class="btn btn-danger btn-sm"
                                             onclick="return confirm('Yakin ingin menghapus barang ini?')">Hapus</a>
                                             <a href="ubah_admin.php?id=<?php echo $result['id']; ?>"
-                                            class="btn btn-info btn-sm">Ubah</a>
+                                            class="btn btn-info btn-sm" id="ubah">Ubah</a>
                                     </div>
                                 </td>
                             </tr>

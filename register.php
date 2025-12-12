@@ -2,15 +2,13 @@
 session_start();
 include 'koneksi.php';
 
-$error = null; // Inisialisasi variabel error
+$error = null;
 
 if (isset($_POST['submit'])) {
-    // Ambil data POST di awal
     $username = $_POST['username'];
     $password = $_POST['password'];
     $confirm_password = $_POST['confirm_password'];
 
-    // 1. VALIDASI INPUT DASAR
     if (empty($username) || empty($password) || empty($confirm_password)) {
         $error = "Semua field wajib diisi.";
     } elseif ($password !== $confirm_password) {
@@ -19,10 +17,8 @@ if (isset($_POST['submit'])) {
         $error = "Password minimal 6 karakter.";
     }
 
-    // HANYA LANJUTKAN PROSES KE DB JIKA TIDAK ADA ERROR VALIDASI
     if (!$error) {
 
-        // 2. Cek apakah Username sudah ada
         $stmt = $conn->prepare("SELECT id_user FROM user WHERE username = ?");
         $stmt->bind_param("s", $username);
         $stmt->execute();
@@ -34,25 +30,21 @@ if (isset($_POST['submit'])) {
         } else {
             $stmt->close();
 
-            // 3. Proses Insert ke DB
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
             $role = 'user';
 
             $query_insert = "INSERT INTO user (username, password, role) VALUES (?, ?, ?)";
             $stmt_insert = $conn->prepare($query_insert);
 
-            // JANGAN PAKAI $password di sini, karena $password hanya digunakan di atas
             $stmt_insert->bind_param("sss", $username, $hashed_password, $role);
 
             if ($stmt_insert->execute()) {
-                // Pendaftaran Berhasil
                 $_SESSION['notif_message'] = "Pendaftaran berhasil! Silakan Login.";
                 $_SESSION['notif_type'] = 'success';
 
                 header('Location: login.php');
                 exit();
             } else {
-                // Error jika INSERT gagal
                 $error = "Gagal mendaftarkan pengguna. Error: " . $conn->error;
             }
             $stmt_insert->close();
@@ -72,17 +64,12 @@ if (isset($_POST['submit'])) {
     <link rel="stylesheet" href="fontawesome/css/font-awesome.min.css">
     <script src="js/bootstrap.bundle.min.js"></script>
     <style>
-        /* CSS yang sama dengan login.php untuk konsistensi */
         .background-blur {
-            background: url('gambar/bg_lelang.jpg') no-repeat center center fixed;
-            /* Ganti path gambar Anda */
+            background: url('gambar/background2.png') no-repeat center center fixed;
             background-size: cover;
             filter: blur(5px);
             position: absolute;
-            top: -5px;
-            bottom: -5px;
-            left: -5px;
-            right: -5px;
+            top: -5px; bottom: -5px; left: -5px; right: -5px;
             z-index: -1;
         }
 
@@ -97,7 +84,6 @@ if (isset($_POST['submit'])) {
         }
 
         .login-card {
-            /* Digunakan juga untuk register card */
             width: 100%;
             max-width: 400px;
             background: rgba(255, 255, 255, 0.9);
@@ -166,7 +152,7 @@ if (isset($_POST['submit'])) {
                 <label for="confirm_password" class="form-label">Konfirmasi Password</label>
                 <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
             </div>
-            <button type="submit" name="submit" class="btn-info">Daftar</button>
+            <button type="submit" name="submit" class="btn btn-info" id="register_submit_btn">Daftar</button>
         </form>
         <p class="text-center mt-3"><small>Sudah punya akun? <a href="login.php">Login di sini</a></small></p>
     </div>
